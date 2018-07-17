@@ -1,19 +1,38 @@
 # -*- coding: utf-8 -*-
- 
-#---------------------------------
-# pangpang2.py
-#---------------------------------
- 
+import time
 import os
 from flask import Flask, request, jsonify
- 
-app = Flask(__name__)
- 
+import request
+
+
+# Retrieve HTTP meta-data
+
+def urldown(content):
+	app = Flask(__name__)
+	now = time.localtime()
+	print('urldown')
+	# 파일 저장할 폴더 경로
+	VOICE_PATH = os.path.join(os.path.dirname(__file__), "voice")
+
+	# 폴더가 없으면 만들어준다
+	if not os.path.exists(VOICE_PATH):
+		os.makedirs(VOICE_PATH)
+
+	url = content
+
+	r = requests.get(url)
+
+	rename = "%04d%02d%02d-%02d%02d%02d.flac" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
+
+	with open(os.path.join(IMAGE_PATH, rename), 'wb') as f:
+		f.write(r.content)
+
+
 @app.route('/keyboard')
 def Keyboard():
     dataSend = {
         "type" : "buttons",
-        "buttons" : ["팡팡이와 대화하기!", "도움말"]
+        "buttons" : ["대화하기", "도움말"]
     }
     return jsonify(dataSend)
  
@@ -21,36 +40,30 @@ def Keyboard():
 def Message():
     dataReceive = request.get_json()
     content = dataReceive['content']
-    if content == u"팡팡이와 대화하기!":
+	
+	
+    if content == u"대화하기":
         dataSend = {
             "message": {
-                "text": "팡팡이 명령어 목록!\n1. 도움말\n2. 안녕!\n3. 저기요~"
+                "text": "말을 해주세요!"
             }
         }
     elif content == u"도움말":
         dataSend = {
             "message": {
-                "text": "이제 곧 정식 버전이 출시될거야. 조금만 기다려~~~"
+                "text": "..."
             }
         }
-    elif u"안녕" in content:
-        dataSend = {
-            "message": {
-                "text": "안녕~~ 반가워 ㅎㅎ"
-            }
-        }
-    elif u"저기" in content:
-        dataSend = {
-            "message": {
-                "text": "볼일 끝났으면 썩 꺼져!"
-            }
-        }
+  
     else:
+		print(content,'else')
+		urldown(content)
         dataSend = {
             "message": {
                 "text": content
             }
         }
+		urldown(content)
     return jsonify(dataSend)
  
 if __name__ == "__main__":
