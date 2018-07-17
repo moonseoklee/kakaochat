@@ -38,34 +38,32 @@ def Keyboard():
  
 @app.route('/message', methods=['POST'])
 def Message():
-    dataReceive = request.get_json()
-    content = dataReceive['content']
+	dataReceive = request.get_json()
+	content = dataReceive['content']
 	
 	
-    if content == u"대화하기":
-        dataSend = {
-            "message": {
-                "text": "말을 해주세요!"
-            }
-        }
-    elif content == u"도움말":
-        dataSend = {
-            "message": {
-                "text": "..."
-            }
-        }
-  
-    else:
-		print(content,'else')
+	if content == u"대화하기":
+		dataSend = {
+			"message": {
+				"text": "말을 해주세요!"
+			}
+		}
+	elif content == u"도움말":
+		dataSend = {
+			"message": {
+				"text": "..."
+			}
+		}
+	else:
+		dataSend = {
+			"message": {
+				"text": content
+			}
+		}
 		urldown(content)
-        dataSend = {
-            "message": {
-                "text": content
-            }
-        }
-		urldown(content)
-    return jsonify(dataSend)
- 
+	
+	return jsonify(dataSend)
+    
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=6000)
 
