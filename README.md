@@ -5,5 +5,5 @@
 
 A program that recognizes the voice sent through Kakao Talk and returns it as text.
 
-###project disposal Kakao does not provide API starting from 2020.
+###project disposal since Kakao does not provide API starting from 2020.
 
